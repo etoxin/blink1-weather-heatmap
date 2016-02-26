@@ -17,11 +17,6 @@ var ledSpeed = 60000;
 /**
  * @type {number}
  */
-var kelvin = 273.15;
-
-/**
- * @type {number}
- */
 var heatmapMax = 35;
 
 /**
@@ -37,7 +32,12 @@ var apiKey = '44db6a862fba0b067b1930da0d769e98';
 /**
  * @type {string}
  */
-var weatherApi = "http://api.openweathermap.org/data/2.5/weather?q=Sydney,Aus&appid=" + apiKey;
+
+/**
+ * @see http://www.bom.gov.au/products/IDN60801/IDN60801.94768.shtml
+ * @type {string}
+ */
+var weatherApi = "http://www.bom.gov.au/fwo/IDN60801/IDN60801.94768.json";
 
 /**
  * @type {number}
@@ -96,7 +96,7 @@ function generateColor() {
                 // parse the body
                 var weatherResponse = JSON.parse(body);
 
-                currentTemp = weatherResponse.main.temp - kelvin;
+                currentTemp = weatherResponse.observations.data[0].apparent_t;
             } else {
                 console.log('response undefined', body);
             }
