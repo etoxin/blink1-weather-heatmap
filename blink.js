@@ -12,7 +12,7 @@ var blink1 = new Blink1();
 /**
  * @type {number}
  */
-var ledSpeed = 60000;
+var ledSpeed = 480000;
 
 /**
  * @type {number}
@@ -23,11 +23,6 @@ var heatmapMax = 35;
  * @type {number}
  */
 var currentTemp = 0;
-
-/**
- * @type {string}
- */
-var apiKey = '44db6a862fba0b067b1930da0d769e98';
 
 /**
  * @type {string}
@@ -96,7 +91,7 @@ function generateColor() {
                 // parse the body
                 var weatherResponse = JSON.parse(body);
 
-                currentTemp = weatherResponse.observations.data[0].apparent_t;
+                currentTemp = weatherResponse.observations.data[0].air_temp;
             } else {
                 console.log('response undefined', body);
             }
