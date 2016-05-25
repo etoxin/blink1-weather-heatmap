@@ -12,7 +12,8 @@ var blink1 = new Blink1();
 /**
  * @type {number}
  */
-var ledSpeed = 480000;
+var ledSpeed = 10000;
+// var ledSpeed = 480000;
 
 /**
  * @type {number}
@@ -22,7 +23,12 @@ var heatmapMax = 35;
 /**
  * @type {number}
  */
-var currentTemp = 0;
+var currentHumidity = 0;
+
+/**
+ * @type {number}
+ */
+var currentApparentTemp = 0;
 
 /**
  * @type {string}
@@ -33,21 +39,6 @@ var currentTemp = 0;
  * @type {string}
  */
 var weatherApi = "http://www.bom.gov.au/fwo/IDN60801/IDN60801.94768.json";
-
-/**
- * @type {number}
- */
-var red = 0;
-
-/**
- * @type {number}
- */
-var green = 0;
-
-/**
- * @type {number}
- */
-var blue = 0;
 
 /**
  * @param value between 0 and 1.
@@ -65,9 +56,11 @@ function heatMapColorforValue(value) {
      */
     var rgb = hslToRgb(h, 100, 50);
 
-    red = Number(rgb.r.toString().substring(0, 3));
-    green = Number(rgb.g.toString().substring(0, 3));
-    blue = Number(rgb.b.toString().substring(0, 3));
+    return {
+        red: Number(rgb.r.toString().substring(0, 3)),
+        green: Number(rgb.g.toString().substring(0, 3)),
+        blue: Number(rgb.b.toString().substring(0, 3))
+    };
 }
 
 /**
@@ -91,7 +84,8 @@ function generateColor() {
                 // parse the body
                 var weatherResponse = JSON.parse(body);
 
-                currentTemp = weatherResponse.observations.data[0].air_temp;
+                currentHumidity = weatherResponse.observations.data[0].rel_hum;
+                currentApparentTemp = weatherResponse.observations.data[0].apparent_t;
             } else {
                 console.log('response undefined', body);
             }
@@ -102,13 +96,17 @@ function generateColor() {
         console.log("Got error: " + e.message);
     });
 
-    heatMapColorforValue(currentTemp / heatmapMax);
+    var colorCurrentHum = heatMapColorforValue(currentHumidity / 100);
+    var colorApparentTemp = heatMapColorforValue(currentApparentTemp / heatmapMax);
 
-    blink1.fadeToRGB(ledSpeed, red, green, blue);
+    console.log(colorCurrentHum, colorApparentTemp);
+
+    blink1.fadeToRGB(ledSpeed, colorCurrentHum.red, colorCurrentHum.green, colorCurrentHum.blue, 2);
+    blink1.fadeToRGB(ledSpeed, colorApparentTemp.red, colorApparentTemp.green, colorApparentTemp.blue, 1);
 
     var now = new Date();
 
-    console.log(currentTemp + ' Celsius (°C) - ', now);
+    // console.log('Current Humidty: ' + currentHumidity + '; Apparent Temp: ' + currentApparentTemp + ' Celsius (°C); ', now);
 
     setTimeout(generateColor, ledSpeed);
 }
