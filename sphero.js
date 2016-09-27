@@ -1,8 +1,17 @@
-var sphero = require("sphero"),
-    orb = sphero("/dev/rfcomm0"); // change port accordingly
+var Cylon = require('cylon');
 
-orb.connect(function(event) {
-    // Sphero's connected!
-    // do some cool stuff here!
-    console.log(event);
-});
+Cylon.robot({
+    connections: {
+        sphero: { adaptor: 'sphero', port: 'COM4' }
+    },
+
+    devices: {
+        sphero: { driver: 'sphero' }
+    },
+
+    work: function(my) {
+        every((1).second(), function() {
+            my.sphero.roll(60, Math.floor(Math.random() * 360));
+        });
+    }
+}).start();

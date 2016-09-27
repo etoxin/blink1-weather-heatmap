@@ -106,7 +106,7 @@ function generateColor() {
 
     var now = new Date();
 
-    // console.log('Current Humidty: ' + currentHumidity + '; Apparent Temp: ' + currentApparentTemp + ' Celsius (°C); ', now);
+    console.log('Current Humidty: ' + currentHumidity + '; Apparent Temp: ' + currentApparentTemp + ' Celsius (°C); ', now);
 
     setTimeout(generateColor, ledSpeed);
 }
